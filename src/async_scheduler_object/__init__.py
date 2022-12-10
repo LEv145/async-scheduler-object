@@ -12,7 +12,7 @@ if t.TYPE_CHECKING:
 class AsyncScheduler():
     __slots__ = ("is_started", "_events", "_seconds_interval", "_task")
 
-    def __init__(self, events: t.List[PeriodicEvent], interval: timedelta):
+    def __init__(self, events: t.List[AsyncSchedulerEvent], interval: timedelta):
         self.is_started = False
 
         self._events = events
@@ -24,7 +24,7 @@ class AsyncScheduler():
             return
 
         self.is_started = True
-        self._task = asyncio.create_task(self._task_loop())
+        self._task = asyncio.create_task(self._start_task_loop())
 
     async def stop(self):
         if not self.is_started:
@@ -33,20 +33,19 @@ class AsyncScheduler():
         self.is_started = False
         await self._cancel_task()
 
-    async def _task_loop(self) -> t.NoReturn:
+    async def _start_task_loop(self) -> t.NoReturn:
         while True:
-            await self._task_loop_iteration()
+            await self._start_task_loop_iteration()
 
-    async def _task_loop_iteration(self) -> None:
-        await self._sleep()
-        await self._start_events()
+    async def _start_task_loop_iteration(self) -> None:
+        await self._sleep_interval()
+        asyncio.create_task(self._start_events())
 
-    async def _sleep(self) -> None:
+    async def _sleep_interval(self) -> None:
         await asyncio.sleep(self._seconds_interval)
 
     async def _start_events(self) -> None:
-        for event in self._events:
-            await event.run()
+        await asyncio.gather(i.run() for i in self._events)
 
     async def _cancel_task(self) -> None:
         if self._task is None:
@@ -57,7 +56,7 @@ class AsyncScheduler():
             await self._task
 
 
-class PeriodicEvent(abc.ABC):
+class AsyncSchedulerEvent(abc.ABC):
     @abc.abstractmethod
     async def run(self) -> None:
         pass

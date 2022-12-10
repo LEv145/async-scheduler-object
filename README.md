@@ -11,10 +11,10 @@ https://pypi.org/project/async-scheduler-object/
 import asyncio
 from datetime import timedelta
 
-from async_scheduler_object import AsyncScheduler, PeriodicEvent
+from async_scheduler_object import AsyncScheduler, AsyncSchedulerEvent
 
 
-class AgePeriodicEvent(PeriodicEvent):
+class AgeSchedulerEvent(AsyncSchedulerEvent):
     def __init__(self, start: int) -> None:
         self._age = start
 
@@ -23,7 +23,7 @@ class AgePeriodicEvent(PeriodicEvent):
         self._age += 1
 
 
-class CatsPeriodicEvent(PeriodicEvent):
+class CatsSchedulerEvent(AsyncSchedulerEvent):
     def __init__(self, start: int) -> None:
         self._cats_count = start
 
@@ -34,11 +34,11 @@ class CatsPeriodicEvent(PeriodicEvent):
 
 async def main() -> None:
     scheduler_1 = AsyncScheduler(
-        events=[AgePeriodicEvent(start=1)],
+        events=[AgeSchedulerEvent(start=1)],
         interval=timedelta(seconds=1),
     )
     scheduler_2 = AsyncScheduler(
-        events=[AgePeriodicEvent(start=10), CatsPeriodicEvent(start=20)],
+        events=[AgeSchedulerEvent(start=10), CatsSchedulerEvent(start=20)],
         interval=timedelta(seconds=0.5),
     )
     await scheduler_1.start()
