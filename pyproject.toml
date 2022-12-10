@@ -1,9 +1,11 @@
 [tool.poetry]
 name = "async-scheduler-object"
-version = "1.0.1"
-description = ""
+version = "1.0.2"
+description = "Object-like async scheduler"
 authors = ["LEv145 <you@example.com>"]
 readme = "README.md"
+license = "MIT"
+repository = "https://github.com/LEv145/async-scheduler-object"
 packages = [{include = "async_scheduler_object", from = "src"}]
 
 [tool.poetry.dependencies]
