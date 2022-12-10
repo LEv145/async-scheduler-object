@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "async-scheduler-object"
+version = "1.0.1"
+description = ""
+authors = ["LEv145 <you@example.com>"]
+readme = "README.md"
+packages = [{include = "async_scheduler_object", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "7.17"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
